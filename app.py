@@ -9,7 +9,7 @@ from config import DATABASE_CONNECTION_URI
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
+app.config['SECRET_KEY'] = 'PxtxjtCaxqmLeSmVNWoMwUcEiPkTHZ'
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_CONNECTION_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -71,25 +71,32 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    form_state = {
+        'form':form,
+        'status':current_user.is_authenticated
+        }
+
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password, form.password.data):
             login_user(user)
             return redirect(url_for('events'))
-        return '<h1>Invalid username or password</h1>'
-    return render_template('login.html', form=form)
+        flash('Invalid username or password')
+        return render_template('login.html', form=form_state)
+    return render_template('login.html', form=form_state)
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
     form = RegisterForm()
+    formulario = {'form':form}
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
         new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         flash('User created successfully')
-        return render_template('login.html', form=form)
-    return render_template('signup.html', form=form)
+        return render_template('login.html', form=formulario)
+    return render_template('signup.html', form=formulario)
 
 @app.route('/logout')
 @login_required
@@ -104,14 +111,15 @@ def events():
     list_events = []
     for e in events:
         list_events.append([e.name, e.category, e.place, e.address, e.start_date, e.end_date, e.modality, e.id])
-    print(list_events)
     show_vars = {
         'username':current_user.username,
         'status':current_user.is_authenticated,
-        'events': list_events
+        'events': list_events,
+        'drop_category':['Conferencia', 'Seminario', 'Congreso', 'Curso'],
+        'drop_modality':['Presencial', 'Virtual']
         }
     
-    return render_template('events.html', show_vars=show_vars)
+    return render_template('events.html', form=show_vars)
 
 @app.route("/events/create", methods=['POST'])
 @login_required
@@ -134,13 +142,18 @@ def create():
 def delete(id):
     db.session.delete(Event.query.get(id))
     db.session.commit()
-    flash('Contact deleted successfully!')
+    flash('Event deleted successfully!')
     return redirect(url_for('events'))
 
 @app.route("/events/update/<id>", methods=['GET', 'POST'])
 @login_required
 def update(id):
     event = Event.query.get(id)
+    event_state = {
+        'username':current_user.username,
+        'event':event,
+        'status':current_user.is_authenticated
+        }
     if request.method == "POST":
         event.name = request.form['name']
         event.category = request.form['category']
@@ -151,11 +164,9 @@ def update(id):
         event.modality = request.form['modality']
 
         db.session.commit()
-
-        flash('Contact updated successfully!')
-
+        flash('Event updated successfully!')
         return redirect(url_for('events'))
-    return render_template('update.html', event=event)
+    return render_template('update.html', form=event_state)
 
 with app.app_context():
     db.create_all()

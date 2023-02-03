@@ -3,32 +3,50 @@
 {% block title %}Events{% endblock %}
 
 {% block main %}
-    <h2> Bienvenido! {{ show_vars.username }} </h2>
-    <form action="{{ url_for('create') }}" method="POST">
-        <input type="text" name="name" placeholder="Name"></div>
-        <input type="text" name="category" placeholder="category"></div>
-        <input type="text" name="place" placeholder="place"></div>
-        <input type="text" name="modality" placeholder="modality"></div>
-        <input type="text" name="address" placeholder="address"></div>
-        <input type="date" name="start_date" placeholder="start_date"></div>
-        <input type="date" name="end_date" placeholder="end_date"></div>
-        <button>Save</button>
-    </form>
-    <div>
-        {% for event in show_vars.events %}
-        <div>
-            <h2>{{ event.0 }}</h2>
+    <div class="row">
+        <div class="col-md-12 m-5 d-flex justify-content-center"><h2> Welcome! {{ form.username }} </h2></div>
+        <div class="col-md-2"></div>
+        <div class="col-md-5">
+            {% for event in form.events %}
             <div>
-                <a href="{{ url_for('update', id=event.7) }}">Update</a>
-                <a href="{{ url_for('delete', id=event.7) }}">Delete</a>
+                <h2>Name: {{ event.0 }}</h2>
+                <div>
+                    <a href="{{ url_for('update', id=event.7) }}">Update</a>
+                    <a href="{{ url_for('delete', id=event.7) }}">Delete</a>
+                </div>
+                <p>Category:{{ event.1 }}</p>
+                <p>Place:{{ event.2 }}</p>
+                <p>Address:{{ event.3 }}</p>
+                <p>Modality:{{ event.4 }}</p>
+                <p>Start Date:{{ event.5 }}</p>
+                <p>End Date:{{ event.6 }}</p>
             </div>
-            <p>{{ event.1 }}</p>
-            <p>{{ event.2 }}</p>
-            <p>{{ event.3 }}</p>
-            <p>{{ event.4 }}</p>
-            <p>{{ event.5 }}</p>
-            <p>{{ event.6 }}</p>
+            {% endfor %}
         </div>
-        {% endfor %}
+        <div class="col-md-3">
+            <form action="{{ url_for('create') }}" method="POST">
+                <div class="my-2"><input type="text" name="name" placeholder="Name"></div>
+                <div class="my-2">
+                    <select name="category">
+                        {% for category in form.drop_category %}
+                            <option value= "{{category}}" SELECTED>{{category}}</option>"
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="my-2"><input type="text" name="place" placeholder="place"></div>
+                <div class="my-2"><input type="text" name="address" placeholder="address"></div>
+                <div class="my-2"><select name="modality">
+                    {% for modality in form.drop_modality %}
+                        <option value= "{{modality}}" SELECTED>{{modality}}</option>"
+                    {% endfor %}
+                </select></div>
+                <div class="my-2"><input type="date" name="start_date" placeholder="start_date"></div>
+                <div class="my-2"><input type="date" name="end_date" placeholder="end_date"></div>
+        
+                <button class="bbtn btn-primary my-3 px-5 border border-primary rounded-lg">Save</button>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
     </div>
+    
 {% endblock %}

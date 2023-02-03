@@ -3,17 +3,21 @@
 {% block title %}Update{% endblock %}
 
 {% block main %}
-    <h2> Update event</h2>
-    <form action="{{ url_for('update', id=event.id) }}" method="POST">
-        <div><input type="text" name="name" placeholder="Name" value="{{event.name}}"></div>
-        <div><input type="text" name="category" placeholder="category" value="{{event.category}}"></div>
-        <div><input type="text" name="place" placeholder="place" value="{{event.place}}"></div>
-        <div><input type="text" name="modality" placeholder="modality" value="{{event.modality}}"></div>
-        <div><input type="text" name="address" placeholder="address" value="{{event.address}}"></div>
-        <div><input type="date" name="start_date" placeholder="start_date" value="{{event.start_date}}">
-            {{event.start_date}}</div>
-        <div><input type="date" name="end_date" placeholder="end_date" value="{{event.end_date}}">
-            {{event.end_date}}</div>
-        <button>Save</button>
-    </form>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center"><h2> Update Event</h2></div>
+        <div class="col-md-12 d-flex justify-content-center">
+            <form action="{{ url_for('update', id=form.event.id) }}" method="POST">
+                <div>Name: <input class="my-2" type="text" name="name" placeholder="Name" value="{{form.event.name}}"></div>
+                <div>Category: <input class="my-2" type="text" name="category" placeholder="category" value="{{form.event.category}}"></div>
+                <div>Place: <input class="my-2" type="text" name="place" placeholder="place" value="{{form.event.place}}"></div>
+                <div>Modality: <input class="my-2" type="text" name="modality" placeholder="modality" value="{{form.event.modality}}"></div>
+                <div>Address: <input class="my-2" type="text" name="address" placeholder="address" value="{{form.event.address}}"></div>
+                <div>Start Date: <input class="my-2" type="date" name="start_date" placeholder="start_date" value="{{form.event.start_date}}">
+                    {{form.event.start_date}}</div>
+                <div>End Date: <input type="date" name="end_date" placeholder="end_date" value="{{form.event.end_date}}">
+                    {{form.event.end_date}}</div>
+                <button class="bbtn btn-primary my-3 px-5 border border-primary rounded-lg">Save</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
