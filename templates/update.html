@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block title %}Update{% endblock %}
+
+{% block main %}
+    <h2> Update event</h2>
+    <form action="{{ url_for('update', id=event.id) }}" method="POST">
+        <div><input type="text" name="name" placeholder="Name" value="{{event.name}}"></div>
+        <div><input type="text" name="category" placeholder="category" value="{{event.category}}"></div>
+        <div><input type="text" name="place" placeholder="place" value="{{event.place}}"></div>
+        <div><input type="text" name="modality" placeholder="modality" value="{{event.modality}}"></div>
+        <div><input type="text" name="address" placeholder="address" value="{{event.address}}"></div>
+        <div><input type="date" name="start_date" placeholder="start_date" value="{{event.start_date}}">
+            {{event.start_date}}</div>
+        <div><input type="date" name="end_date" placeholder="end_date" value="{{event.end_date}}">
+            {{event.end_date}}</div>
+        <button>Save</button>
+    </form>
+{% endblock %}
